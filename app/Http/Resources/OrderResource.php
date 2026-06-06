@@ -14,19 +14,28 @@ class OrderResource extends JsonResource
             'order_code' => $this->order_code,
             'status' => $this->status,
             'shipping_address' => $this->shipping_address,
+            'discount' => $this->discount,
+            'discount_amount' => $this->discount_amount,
             'total_price' => $this->total_price,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
 
-            'user' => $this->user ? [
+            'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'email' => $this->user->email,
+            ],
+            
+            'pelanggan' => $this->pelanggan ? [
+                'id' => $this->pelanggan->id,
+                'name' => $this->pelanggan->name,
+                'no_hp' => $this->pelanggan->no_hp,
+                'email' => $this->pelanggan->alamat,
             ] : null,
 
             'items' => $this->items->map(function ($item) {
                 return [
-                    'produk_id' => optional($item->produk)->id,
-                    'produk_name' => optional($item->produk)->namaBarang,
+                    'produk_id' => $item->produk->id,
+                    'produk_name' => $item->produk->namaBarang,
                     'price' => $item->price,
                     'quantity' => $item->quantity,
                     'subtotal' => $item->subtotal,

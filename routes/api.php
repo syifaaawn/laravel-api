@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\BukuApiController;
 use App\Http\Controllers\Api\ProdukApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\PelangganController;
+use App\Http\Controllers\Api\SupplierController;
+use App\Http\Controllers\Api\PembelianController;
 
 use Illuminate\Http\Request;
 
@@ -28,6 +31,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Optional: revoke token
 
     // Tambah route API lain di sini, misal Route::apiResource('posts', PostController::class);
+
+// Pelanggan
+Route::get('/pelanggan', [PelangganController::class, 'index']);
+Route::post('/pelanggan', [PelangganController::class, 'store']);
+Route::get('/pelanggan/phone/{no_hp}', [PelangganController::class, 'findByPhone']);
+Route::put('/pelanggan/{id}', [PelangganController::class, 'update']);
+Route::delete('/pelanggan/{id}', [PelangganController::class, 'destroy']);
+
+ // Supplier
+Route::get('/suppliers', [SupplierController::class, 'index']);
+Route::post('/suppliers', [SupplierController::class, 'store']);
+Route::get('/suppliers/{supplier}', [SupplierController::class, 'show']);
+Route::put('/suppliers/{supplier}', [SupplierController::class, 'update']);
+Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy']);
+
+// Pembelian
+Route::get('/pembelians', [PembelianController::class, 'index']);
+Route::post('/pembelians', [PembelianController::class, 'store']);
+Route::get('/pembelians/{pembelian}', [PembelianController::class, 'show']);
+Route::patch('/pembelians/{pembelian}/status', [PembelianController::class, 'updateStatus']);
+Route::delete('/pembelians/{pembelian}', [PembelianController::class, 'destroy']);
 
 });
 

@@ -29,22 +29,33 @@ class OrderApiController extends Controller
 
         try {
 
+            $discount = 0;
+            $discountAmount = 0;
+
+             // Cek apakah ada pelanggan member -> dapat diskon 5%
+             if ($request->pelanggan_id) {
+                $discount = 5;
+            }
+
             $order = Order::create([
                 'user_id' => $request->user_id,
+                'pelanggan_id' => $request->pelanggan_id,
                 'order_code' => 'ORD-' . time(),
                 'total_price' => 0,
+                'discount' => $discount,
+                'discount_amount' => 0,
                 'shipping_address' => $request->shipping_address,
                 'status' => 'pending',
             ]);
 
-            $total = 0;
+            $subtotalBefore = 0;
 
             foreach ($request->items as $item) {
 
                 $produk = Produk::findOrFail($item['product_id']);
 
                 $subtotal = $produk->harga * $item['quantity'];
-                $total += $subtotal;
+                $subtotalBefore += $subtotal;
 
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -55,8 +66,12 @@ class OrderApiController extends Controller
                 ]);
             }
 
+            $discountAmount = $subtotalBefore * ($discount / 100);
+            $totalAfterDiscount = $subtotalBefore - $discountAmount;
+
             $order->update([
-                'total_price' => $total
+                'total_price' => $totalAfterDiscount,
+                'discount_amount' => $discountAmount,
             ]);
 
             DB::commit();

@@ -22,7 +22,7 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
           return [
-            'user_id' => 'required|exists:user_apis,id',
+            'user_id' => 'required|exists:users,id',
             'shipping_address' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:produks,id',
@@ -30,6 +30,16 @@ class StoreOrderRequest extends FormRequest
         ];
     }
 
-
+      public function messages(): array
+    {
+        return [
+            'user_id.exists' => 'User tidak ditemukan',
+            'items.required' => 'Keranjang belanja kosong',
+            'items.*.produk_id.exists' => 'Produk tidak ditemukan',
+            'items.*.quantity.min' => 'Jumlah minimal 1',
+        ];
+    }
     
 }
+
+
